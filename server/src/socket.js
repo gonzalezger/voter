@@ -1,21 +1,20 @@
-const shortid = require('shortid');
-const socketEvents = require('./../../common/socketEvents');
+const events = require('./common/events');
 
 const rooms = {};
 
-module.exports = (io) => {
-  io.on(socketEvents.CONNECTION, socket => {
-    socket.on(socketEvents.DISCONNECT, () => {
+module.exports = io => {
+  io.on(events.CONNECTION, socket => {
+    socket.on(events.DISCONNECT, () => {
       leaveRoom(socket);
     });
 
-    socket.on(socketEvents.JOIN_ROOM, async ({ roomId, userName, isCreating }) => {
+    socket.on(events.JOIN_ROOM, async ({ roomId, userName, isCreating }) => {
       const room = isCreating ? createRoom(roomId) : roomId;
 
       const result = await joinRoomAsync(socket, { room, userName, isAdmin: isCreating });
 
       if (result) {
-        socket.to(room).emit(socketEvents.UPDATE_USERS_CONNECTED, {
+        socket.to(room).emit(events.UPDATE_USERS_CONNECTED, {
           usersConnected: Object.values(rooms[room].connectedClients).map(m => m.user.name)
         });
 
@@ -39,7 +38,7 @@ function createRoom(name) {
 
 function joinRoomAsync(socket, { room, userName, isAdmin }) {
   if (rooms[room] && rooms[room].connectedClients && Object.values(rooms[room].connectedClients).find(f => f.user.name.toLowerCase() === userName.toLowerCase())) {
-    socket.emit(socketEvents.ALREADY_EXIST, { message: 'There is already a user with the same name in the room.' })
+    socket.emit(events.ALREADY_EXIST, { message: 'There is already a user with the same name in the room.' })
     return;
   }
 
@@ -54,7 +53,7 @@ function joinRoomAsync(socket, { room, userName, isAdmin }) {
 
       rooms[room].connectedClients[socket.id] = { user: { name: userName, isAdmin } };
 
-      socket.emit(socketEvents.ENTER_ROOM, {
+      socket.emit(events.ENTER_ROOM, {
         room: rooms[room],
         usersConnected: Object.values(rooms[room].connectedClients).map(m => m.user.name),
         user: { name: userName, isAdmin }
@@ -69,7 +68,7 @@ function leaveRoom(socket) {
   Object.values(rooms).forEach(room => {
     delete room.connectedClients[socket.id];
 
-    socket.to(room.id).emit(socketEvents.UPDATE_USERS_CONNECTED, {
+    socket.to(room.id).emit(events.UPDATE_USERS_CONNECTED, {
       usersConnected: Object.values(room.connectedClients).map(m => m.user.name)
     });
   });
