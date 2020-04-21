@@ -3,10 +3,11 @@
 const shortid = require('shortid');
 const errors = require('../common/errors');
 
-const rooms = {};
+const db = require('../db/db');
 
 function getRoom(id) {
-  return rooms[id] || errors.ROOM_NOT_FOUND;
+  console.log(db);
+  return db.rooms[id] || errors.ROOM_NOT_FOUND;
 }
 
 function createRoom(name) {
@@ -26,7 +27,7 @@ function createRoom(name) {
 function deleteRoom(id) {
   if (!existRoom(id)) return errors.ROOM_NOT_FOUND;
 
-  delete rooms[id];
+  delete db.rooms[id];
 
   return rooms;
 }
@@ -42,7 +43,7 @@ function addClient(roomId, { socket, name, isAdmin }) {
 
   if (existClient(roomId, socket.id)) return errors.CLIENT_FOUND;
 
-  const room = rooms[roomId];
+  const room = db.rooms[roomId];
 
   room.connectedClients[socket.id] = { name, isAdmin };
 
@@ -54,7 +55,7 @@ function deleteClient(roomId, { socket }) {
 
   if (!existClient(roomId, socket.id)) return errors.CLIENT_NOT_FOUND;
 
-  const room = rooms[roomId];
+  const room = db.rooms[roomId];
 
   delete room.connectedClients[socket.id];
 
@@ -66,11 +67,11 @@ function deleteClient(roomId, { socket }) {
 }
 
 function existRoom(id) {
-  return !!rooms[id];
+  return !!db.rooms[id];
 }
 
 function existClient(roomId, socketId) {
-  return !!rooms[roomId].connectedClients[socketId];
+  return !!db.rooms[roomId].connectedClients[socketId];
 }
 
 module.exports = {
