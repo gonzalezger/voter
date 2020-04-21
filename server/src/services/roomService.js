@@ -10,6 +10,8 @@ function getRoom(id) {
 }
 
 function createRoom(name) {
+  if (!name) return errors.EMPTY_PARAMETER_VALUE('name');
+
   const id = shortid.generate();
 
   rooms[id] = {
