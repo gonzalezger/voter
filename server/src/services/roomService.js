@@ -78,8 +78,8 @@ function deleteClient(roomId, { socket }) {
 
   delete room.connectedClients[socket.id];
 
-  // TODO: getRoomConnectedClients returns string when it 'fails' this condition will always evaluate to true
-  if (getRoomConnectedClients(roomId).length) {
+  const connectedClients = getRoomConnectedClients(roomId);
+  if (Array.isArray(connectedClients) && connectedClients.length) {
     deleteRoom(roomId);
   }
 
