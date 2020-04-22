@@ -17,15 +17,17 @@ function getRoom(id) {
 function createRoom(name) {
   if (!name) return errors.EMPTY_PARAMETER_VALUE('name');
 
+  if (!typeChecker.isString(name)) return errors.BAD_PARAMETER_TYPE(typeof name, 'string');
+
   const id = shortid.generate();
 
-  rooms[id] = {
+  db.rooms[id] = {
     id,
     name,
     connectedClients: {}
   };
 
-  return id;
+  return { id, name };
 }
 
 function deleteRoom(id) {

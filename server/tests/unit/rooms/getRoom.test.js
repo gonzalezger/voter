@@ -16,7 +16,6 @@ jest.mock('../../../src/db/db', () => {
 });
 
 describe('Get room', () => {
-
   it('Should return a single room when the room exist', () => {
     // Arrange
     const roomId = '1';
@@ -29,7 +28,6 @@ describe('Get room', () => {
     // Assert
     expect(result).not.toBe(undefined);
     expect(result).not.toBe(null);
-    expect(typeof result).not.toBe(typeof 'string');
     expect(result).toHaveProperty('id');
     expect(result).toHaveProperty('name');
     expect(result).toHaveProperty('connectedClients');
