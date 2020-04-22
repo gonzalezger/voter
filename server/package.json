@@ -2,24 +2,30 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/server.js",
   "scripts": {
     "dev": "nodemon src/server.js",
-    "test": "npm run eslint && jest --verbose",
+    "test": "jest --verbose",
     "test:watch": "jest --verbose --watch",
-    "prettier": "prettier --write \"{src,tests}/**/*.{js,ts}\"",
-    "eslint": "eslint --format codeframe \"src/**/*.js\" \"tests/**/*.js\""
+    "test:prod": "npm run lint && npm run test -- --coverage --no-cache",
+    "report-coverage": "cat ./coverage/lcov.info | coveralls",
+    "prettier": "prettier --write '{src,tests}/**/*.{js,ts}'",
+    "lint": "eslint --format codeframe 'src/**/*.js' 'tests/**/*.js'"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Ger Gonzalez <gercho.gonzalez@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gonzalezger/voter"
+  },
+  "license": "MIT",
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "lint-staged && git cz --hook || true"
     }
   },
   "lint-staged": {
-    "*.{js,ts}": [
+    "{src,tests}/**/*.{js,ts}": [
       "prettier --write",
       "eslint --fix",
       "git add"
@@ -31,6 +37,9 @@
     "socket.io": "^2.3.0"
   },
   "devDependencies": {
+    "commitizen": "^4.0.4",
+    "coveralls": "^3.0.13",
+    "cz-conventional-changelog": "^3.1.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-jest": "^23.8.2",
@@ -39,5 +48,10 @@
     "jest": "^25.4.0",
     "lint-staged": "^10.1.7",
     "prettier": "^2.0.5"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
