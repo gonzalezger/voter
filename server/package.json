@@ -10,7 +10,8 @@
     "test:prod": "npm run lint && npm run test -- --coverage --no-cache",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
     "prettier": "prettier --write '{src,tests}/**/*.{js,ts}'",
-    "lint": "eslint --format codeframe 'src/**/*.js' 'tests/**/*.js'"
+    "lint": "eslint --format codeframe 'src/**/*.js' 'tests/**/*.js'",
+    "commit": "git-cz"
   },
   "keywords": [],
   "author": "Ger Gonzalez <gercho.gonzalez@gmail.com>",
@@ -21,7 +22,7 @@
   "license": "MIT",
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged && git cz --hook || true"
+      "pre-commit": "lint-staged"
     }
   },
   "lint-staged": {
