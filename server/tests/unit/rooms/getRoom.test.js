@@ -26,13 +26,13 @@ describe('Get room', () => {
     const result = roomService.getRoom(roomId);
 
     // Assert
-    expect(result).not.toBe(undefined);
-    expect(result).not.toBe(null);
     expect(result).toHaveProperty('id');
-    expect(result).toHaveProperty('name');
-    expect(result).toHaveProperty('connectedClients');
     expect(result.id).toBe(expectedRoomId);
+
+    expect(result).toHaveProperty('name');
     expect(result.name).toMatch(expectedName);
+
+    expect(result).toHaveProperty('connectedClients');
   });
 
   it('Should return ROOM_NOT_FOUND custom error when the room does not exist', () => {
@@ -43,26 +43,19 @@ describe('Get room', () => {
     const result = roomService.getRoom(roomId);
 
     // Assert
-    expect(result).not.toBe(undefined);
-    expect(result).not.toBe(null);
-    expect(typeof result).toBe(typeof 'string');
     expect(result).toBe(errors.ROOM_NOT_FOUND);
-
   });
 
-  it('Should return BAD_PARAMETER_TYPE custom error when the parameter is not a string', () => {
+  it('Should return INVALID_PARAMETER_TYPE custom error when the parameter is not a string', () => {
     // Arrange
     const roomId = 1;
-    const expectedError = errors.BAD_PARAMETER_TYPE(typeof roomId, typeof 'string');
+    const expectedError = errors.INVALID_PARAMETER_TYPE(typeof roomId, typeof 'string');
 
     // Act
     const result = roomService.getRoom(roomId);
 
     // Assert
-    expect(result).not.toBe(undefined);
-    expect(result).not.toBe(null);
     expect(result).toMatch(expectedError);
-    expect(typeof result).toBe(typeof 'string');
   });
 
   it('Should return EMPTY_PARAMETER_VALUE custom error when the parameter is empty', () => {
@@ -75,8 +68,5 @@ describe('Get room', () => {
 
     // Assert
     expect(result).toMatch(expectedError);
-    expect(result).not.toBe(undefined);
-    expect(result).not.toBe(null);
-    expect(typeof result).toBe(typeof 'string');
   });
 });
