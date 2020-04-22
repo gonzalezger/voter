@@ -21,7 +21,8 @@
   "license": "MIT",
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged && git cz --hook || true"
+      "prepare-commit-msg": "exec < /dev/tty && git cz --hook",
+      "pre-commit": "lint-staged"
     }
   },
   "lint-staged": {
