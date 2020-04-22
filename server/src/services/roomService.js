@@ -2,11 +2,15 @@
 
 const shortid = require('shortid');
 const errors = require('../common/errors');
+const typeChecker = require('../common/typeChecker');
 
 const db = require('../db/db');
 
 function getRoom(id) {
-  console.log(db);
+  if (!id) return errors.EMPTY_PARAMETER_VALUE('id');
+
+  if (!typeChecker.isString(id)) return errors.BAD_PARAMETER_TYPE(typeof id, 'string');
+
   return db.rooms[id] || errors.ROOM_NOT_FOUND;
 }
 

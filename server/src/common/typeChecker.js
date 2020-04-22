@@ -12,3 +12,8 @@ function isString(str) {
 function isNumber(n) {
   return n === parseFloat(n, 10);
 }
+
+module.exports = {
+  isString,
+  isNumber
+}
