@@ -11,7 +11,7 @@
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
     "prettier": "prettier --write '{src,tests}/**/*.{js,ts}'",
     "lint": "eslint --format codeframe 'src/**/*.js' 'tests/**/*.js'",
-    "commit": "git-cz"
+    "cm": "git-cz"
   },
   "keywords": [],
   "author": "Ger Gonzalez <gercho.gonzalez@gmail.com>",
