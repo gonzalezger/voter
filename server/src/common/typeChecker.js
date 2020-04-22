@@ -16,4 +16,4 @@ function isNumber(n) {
 module.exports = {
   isString,
   isNumber
-}
+};

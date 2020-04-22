@@ -32,7 +32,7 @@ function createRoom(name) {
 
 function deleteRoom(id) {
   if (!id) return errors.EMPTY_PARAMETER_VALUE('id');
-  
+
   if (!typeChecker.isString(id)) return errors.INVALID_PARAMETER_TYPE(typeof id, 'string');
 
   if (!existRoom(id)) return errors.ROOM_NOT_FOUND;
@@ -78,7 +78,8 @@ function deleteClient(roomId, { socket }) {
 
   delete room.connectedClients[socket.id];
 
-  if (!!getRoomConnectedClients(roomId).length) {
+  // TODO: getRoomConnectedClients returns string when it 'fails' this condition will always evaluate to true
+  if (getRoomConnectedClients(roomId).length) {
     deleteRoom(roomId);
   }
 
@@ -100,4 +101,4 @@ module.exports = {
   getRoomConnectedClients,
   addClient,
   deleteClient
-}
+};

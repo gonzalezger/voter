@@ -12,7 +12,7 @@ jest.mock('../../../src/db/db', () => {
         connectedClients: {}
       }
     }
-  }
+  };
 });
 
 describe('Get room', () => {
@@ -37,7 +37,7 @@ describe('Get room', () => {
 
   it('Should return ROOM_NOT_FOUND custom error when the room does not exist', () => {
     // Arrange
-    const roomId = "2";
+    const roomId = '2';
 
     // Act
     const result = roomService.getRoom(roomId);

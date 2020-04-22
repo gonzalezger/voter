@@ -6,7 +6,7 @@ const errors = require('./../../../src/common/errors');
 jest.mock('../../../src/db/db', () => {
   return {
     rooms: {}
-  }
+  };
 });
 
 describe('Create room', () => {

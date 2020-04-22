@@ -1,6 +1,6 @@
 'use strict';
 
-const server = require('http').createServer()
+const server = require('http').createServer();
 const io = require('socket.io')(server);
 const socket = require('./socket');
 const PORT = process.env.PORT || 4000;

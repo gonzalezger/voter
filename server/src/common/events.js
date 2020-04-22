@@ -9,4 +9,4 @@ module.exports = Object.freeze({
   USER_LEFT_ROOM: 'user_left_room',
 
   ALREADY_EXIST: 'already_exist'
-})
+});
