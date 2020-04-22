@@ -1,7 +1,7 @@
 'use strict';
 
 const roomService = require('./../../../src/services/roomService');
-const errors = require('./../../../src/common/errors');
+const Errors = require('./../../../src/common/Errors');
 
 jest.mock('../../../src/db/db', () => {
   return {
@@ -30,7 +30,7 @@ describe('Delete room', () => {
   it('Should return INVALID_PARAMETER_TYPE custom error when the parameter is not a string', () => {
     // Arrange
     const id = 1;
-    const expectedError = errors.INVALID_PARAMETER_TYPE(typeof id, typeof 'string');
+    const expectedError = Errors.INVALID_PARAMETER_TYPE(typeof id, typeof 'string');
 
     // Act
     const result = roomService.deleteRoom(id);
@@ -42,7 +42,7 @@ describe('Delete room', () => {
   it('Should return EMPTY_PARAMETER_VALUE custom error when the parameter is empty', () => {
     // Arrange
     const id = '';
-    const expectedError = errors.EMPTY_PARAMETER_VALUE('id');
+    const expectedError = Errors.EMPTY_PARAMETER_VALUE('id');
 
     // Act
     const result = roomService.deleteRoom(id);
@@ -59,6 +59,6 @@ describe('Delete room', () => {
     const result = roomService.deleteRoom(roomId);
 
     // Assert
-    expect(result).toBe(errors.ROOM_NOT_FOUND);
+    expect(result).toBe(Errors.ROOM_NOT_FOUND);
   });
 });

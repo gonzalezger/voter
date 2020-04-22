@@ -1,23 +1,23 @@
 'use strict';
 
 const shortid = require('shortid');
-const errors = require('../common/errors');
+const Errors = require('../common/Errors');
 const typeChecker = require('../common/typeChecker');
 
 const db = require('../db/db');
 
 function getRoom(id) {
-  if (!id) return errors.EMPTY_PARAMETER_VALUE('id');
+  if (!id) return Errors.EMPTY_PARAMETER_VALUE('id');
 
-  if (!typeChecker.isString(id)) return errors.INVALID_PARAMETER_TYPE(typeof id, 'string');
+  if (!typeChecker.isString(id)) return Errors.INVALID_PARAMETER_TYPE(typeof id, 'string');
 
-  return db.rooms[id] || errors.ROOM_NOT_FOUND;
+  return db.rooms[id] || Errors.ROOM_NOT_FOUND;
 }
 
 function createRoom(name) {
-  if (!name) return errors.EMPTY_PARAMETER_VALUE('name');
+  if (!name) return Errors.EMPTY_PARAMETER_VALUE('name');
 
-  if (!typeChecker.isString(name)) return errors.INVALID_PARAMETER_TYPE(typeof name, 'string');
+  if (!typeChecker.isString(name)) return Errors.INVALID_PARAMETER_TYPE(typeof name, 'string');
 
   const id = shortid.generate();
 
@@ -31,11 +31,11 @@ function createRoom(name) {
 }
 
 function deleteRoom(id) {
-  if (!id) return errors.EMPTY_PARAMETER_VALUE('id');
+  if (!id) return Errors.EMPTY_PARAMETER_VALUE('id');
 
-  if (!typeChecker.isString(id)) return errors.INVALID_PARAMETER_TYPE(typeof id, 'string');
+  if (!typeChecker.isString(id)) return Errors.INVALID_PARAMETER_TYPE(typeof id, 'string');
 
-  if (!existRoom(id)) return errors.ROOM_NOT_FOUND;
+  if (!existRoom(id)) return Errors.ROOM_NOT_FOUND;
 
   try {
     delete db.rooms[id];
@@ -48,19 +48,19 @@ function deleteRoom(id) {
 }
 
 function getRoomConnectedClients(id) {
-  if (!id) return errors.EMPTY_PARAMETER_VALUE('id');
+  if (!id) return Errors.EMPTY_PARAMETER_VALUE('id');
 
-  if (!existRoom(id)) return errors.ROOM_NOT_FOUND;
+  if (!existRoom(id)) return Errors.ROOM_NOT_FOUND;
 
   return Object.values(db.rooms[id].connectedClients);
 }
 
 function addClient(roomId, { socket, name, isAdmin }) {
-  if (!roomId) return errors.EMPTY_PARAMETER_VALUE('roomId');
+  if (!roomId) return Errors.EMPTY_PARAMETER_VALUE('roomId');
 
-  if (!existRoom(roomId)) return errors.ROOM_NOT_FOUND;
+  if (!existRoom(roomId)) return Errors.ROOM_NOT_FOUND;
 
-  if (existClient(roomId, socket.id)) return errors.CLIENT_FOUND;
+  if (existClient(roomId, socket.id)) return Errors.CLIENT_FOUND;
 
   const room = db.rooms[roomId];
 
@@ -70,9 +70,9 @@ function addClient(roomId, { socket, name, isAdmin }) {
 }
 
 function deleteClient(roomId, { socket }) {
-  if (!existRoom(roomId)) return errors.ROOM_NOT_FOUND;
+  if (!existRoom(roomId)) return Errors.ROOM_NOT_FOUND;
 
-  if (!existClient(roomId, socket.id)) return errors.CLIENT_NOT_FOUND;
+  if (!existClient(roomId, socket.id)) return Errors.CLIENT_NOT_FOUND;
 
   const room = db.rooms[roomId];
 
