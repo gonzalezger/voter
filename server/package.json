@@ -16,13 +16,12 @@
   "keywords": [],
   "author": "Ger Gonzalez <gercho.gonzalez@gmail.com>",
   "repository": {
-    "type": "git",
-    "url": "https://github.com/gonzalezger/voter"
+    "type": "git"
   },
   "license": "MIT",
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "lint-staged && git cz --hook || true"
     }
   },
   "lint-staged": {
@@ -52,7 +51,7 @@
   },
   "config": {
     "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
+      "path": "server/node_modules/cz-conventional-changelog"
     }
   }
 }
