@@ -50,6 +50,8 @@ function deleteRoom(id) {
 function getRoomConnectedClients(id) {
   if (!id) return Errors.EMPTY_PARAMETER_VALUE('id');
 
+  if (!typeChecker.isString(id)) return Errors.INVALID_PARAMETER_TYPE(typeof id, 'string');
+
   if (!existRoom(id)) return Errors.ROOM_NOT_FOUND;
 
   return Object.values(db.rooms[id].connectedClients);
@@ -64,7 +66,7 @@ function addClient(roomId, { socket, name, isAdmin }) {
 
   const room = db.rooms[roomId];
 
-  room.connectedClients[socket.id] = { name, isAdmin };
+  room.connectedClients[socket.id] = { id: socket.id, name, isAdmin };
 
   return Object.values(room.connectedClients);
 }

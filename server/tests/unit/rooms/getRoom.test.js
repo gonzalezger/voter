@@ -30,7 +30,7 @@ describe('Get room', () => {
     expect(result.id).toBe(expectedRoomId);
 
     expect(result).toHaveProperty('name');
-    expect(result.name).toMatch(expectedName);
+    expect(result.name).toBe(expectedName);
 
     expect(result).toHaveProperty('connectedClients');
   });
@@ -55,7 +55,7 @@ describe('Get room', () => {
     const result = roomService.getRoom(roomId);
 
     // Assert
-    expect(result).toMatch(expectedError);
+    expect(result).toBe(expectedError);
   });
 
   it('Should return EMPTY_PARAMETER_VALUE custom error when the parameter is empty', () => {
@@ -67,6 +67,6 @@ describe('Get room', () => {
     const result = roomService.getRoom(roomId);
 
     // Assert
-    expect(result).toMatch(expectedError);
+    expect(result).toBe(expectedError);
   });
 });

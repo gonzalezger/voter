@@ -36,7 +36,7 @@ describe('Delete room', () => {
     const result = roomService.deleteRoom(id);
 
     // Assert
-    expect(result).toMatch(expectedError);
+    expect(result).toBe(expectedError);
   });
 
   it('Should return EMPTY_PARAMETER_VALUE custom error when the parameter is empty', () => {
@@ -48,7 +48,7 @@ describe('Delete room', () => {
     const result = roomService.deleteRoom(id);
 
     // Assert
-    expect(result).toMatch(expectedError);
+    expect(result).toBe(expectedError);
   });
 
   it('Should return ROOM_NOT_FOUND custom error when the room does not exist', () => {

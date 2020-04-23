@@ -35,7 +35,7 @@ describe('Create room', () => {
     const result = roomService.createRoom(name);
 
     // Assert
-    expect(result).toMatch(expectedError);
+    expect(result).toBe(expectedError);
   });
 
   it('Should return EMPTY_PARAMETER_VALUE custom error when the parameter is empty', () => {
@@ -47,6 +47,6 @@ describe('Create room', () => {
     const result = roomService.createRoom(name);
 
     // Assert
-    expect(result).toMatch(expectedError);
+    expect(result).toBe(expectedError);
   });
 });
