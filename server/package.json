@@ -9,7 +9,7 @@
     "test:watch": "jest --verbose --watch",
     "test:prod": "npm run lint && npm run test -- --coverage --no-cache",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
-    "prettier": "prettier --write '{src,tests}/**/*.{js,ts}'",
+    "prettier": "prettier --write \"{src,tests}/**/*.{js,ts}\"",
     "lint": "eslint --format codeframe \"src/**/*.js\" \"tests/**/*.js\""
   },
   "keywords": [],
@@ -24,9 +24,10 @@
     }
   },
   "lint-staged": {
-    "{src,tests}/**/*.{js,ts}": [
+    "**/*.+(js|ts)": [
+      "eslint --fix",
       "prettier --write",
-      "eslint --fix"
+      "git add"
     ]
   },
   "dependencies": {
