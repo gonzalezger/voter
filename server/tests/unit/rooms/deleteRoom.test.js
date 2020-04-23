@@ -1,30 +1,32 @@
 'use strict';
 
-const roomService = require('./../../../src/services/roomService');
-const Errors = require('./../../../src/common/Errors');
+const { expect } = require('chai');
+const sinon = require('sinon');
 
-jest.mock('../../../src/db/db', () => {
-  return {
-    rooms: {
+const db = require('../../../src/db/db');
+
+const roomService = require('../../../src/services/roomService');
+const Errors = require('../../../src/common/Errors');
+
+describe('Delete room', () => {
+  it('Should return true when the room is deleted', () => {
+    // Arrange
+    sinon.stub(db, 'rooms').value({
       '1': {
         id: '1',
         name: 'Test room',
         connectedClients: {}
       }
-    }
-  };
-});
+    });
 
-describe('Delete room', () => {
-  it('Should return true when the room is deleted', () => {
-    // Arrange
     const id = '1';
 
     // Act
     const result = roomService.deleteRoom(id);
 
     // Assert
-    expect(result).toBe(true);
+    expect(result).to.be.a('boolean');
+    expect(result).to.be.true;
   });
 
   it('Should return INVALID_PARAMETER_TYPE custom error when the parameter is not a string', () => {
@@ -36,7 +38,8 @@ describe('Delete room', () => {
     const result = roomService.deleteRoom(id);
 
     // Assert
-    expect(result).toBe(expectedError);
+    expect(result).to.be.a('string');
+    expect(result).to.be.equal(expectedError);
   });
 
   it('Should return EMPTY_PARAMETER_VALUE custom error when the parameter is empty', () => {
@@ -48,17 +51,28 @@ describe('Delete room', () => {
     const result = roomService.deleteRoom(id);
 
     // Assert
-    expect(result).toBe(expectedError);
+    expect(result).to.be.a('string');
+    expect(result).to.be.equal(expectedError);
   });
 
   it('Should return ROOM_NOT_FOUND custom error when the room does not exist', () => {
     // Arrange
+    sinon.stub(db, 'rooms').value({
+      '1': {
+        id: '1',
+        name: 'Test room',
+        connectedClients: {}
+      }
+    });
+
     const roomId = '2';
+    const expectedError = Errors.ROOM_NOT_FOUND;
 
     // Act
     const result = roomService.deleteRoom(roomId);
 
     // Assert
-    expect(result).toBe(Errors.ROOM_NOT_FOUND);
+    expect(result).to.be.a('string');
+    expect(result).to.be.equal(expectedError);
   });
 });

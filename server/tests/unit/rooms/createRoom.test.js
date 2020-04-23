@@ -1,17 +1,17 @@
 'use strict';
 
-const roomService = require('./../../../src/services/roomService');
-const Errors = require('./../../../src/common/Errors');
+const { expect } = require('chai');
+const sinon = require('sinon');
 
-jest.mock('../../../src/db/db', () => {
-  return {
-    rooms: {}
-  };
-});
+const db = require('../../../src/db/db');
+const roomService = require('../../../src/services/roomService');
+const Errors = require('../../../src/common/Errors');
 
 describe('Create room', () => {
   it('Should return id and name when the room is created', () => {
     // Arrange
+    sinon.stub(db, 'rooms').value({});
+
     const name = 'Test room';
     const expectedName = 'Test room';
 
@@ -19,11 +19,12 @@ describe('Create room', () => {
     const result = roomService.createRoom(name);
 
     // Assert
-    expect(result).toHaveProperty('id');
-    expect(typeof result.id).toBe(typeof 'string');
+    expect(result).to.have.property('id');
+    expect(result.id).to.be.a('string');
 
-    expect(result).toHaveProperty('name');
-    expect(result.name).toBe(expectedName);
+    expect(result).to.have.property('name');
+    expect(result.name).to.be.a('string');
+    expect(result.name).to.be.equal(expectedName);
   });
 
   it('Should return INVALID_PARAMETER_TYPE custom error when the parameter is not a string', () => {
@@ -35,7 +36,8 @@ describe('Create room', () => {
     const result = roomService.createRoom(name);
 
     // Assert
-    expect(result).toBe(expectedError);
+    expect(result).to.be.a('string');
+    expect(result).to.be.equal(expectedError);
   });
 
   it('Should return EMPTY_PARAMETER_VALUE custom error when the parameter is empty', () => {
@@ -47,6 +49,7 @@ describe('Create room', () => {
     const result = roomService.createRoom(name);
 
     // Assert
-    expect(result).toBe(expectedError);
+    expect(result).to.be.a('string');
+    expect(result).to.be.equal(expectedError);
   });
 });
