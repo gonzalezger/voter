@@ -91,8 +91,17 @@ function addClient(roomId, { socketId, name, isAdmin } = {}) {
   return Object.values(room.connectedClients);
 }
 
-function deleteClient(roomId, { socketId }) {
+function deleteClient(roomId, socketId) {
+  if (!roomId) return Errors.EMPTY_PARAMETER_VALUE('roomId');
+
+  if (!typeChecker.isString(roomId)) return Errors.INVALID_PARAMETER_TYPE(typeof roomId, 'string');
+
   if (!existRoom(roomId)) return Errors.ROOM_NOT_FOUND;
+
+  if (!socketId) return Errors.EMPTY_PARAMETER_VALUE('socketId');
+
+  if (!typeChecker.isString(socketId))
+    return Errors.INVALID_PARAMETER_TYPE(typeof socketId, 'string');
 
   if (!existClient(roomId, socketId)) return Errors.CLIENT_NOT_FOUND;
 
@@ -101,8 +110,10 @@ function deleteClient(roomId, { socketId }) {
   delete room.connectedClients[socketId];
 
   const connectedClients = getRoomConnectedClients(roomId);
-  if (Array.isArray(connectedClients) && connectedClients.length) {
+  if (Array.isArray(connectedClients) && !connectedClients.length) {
     deleteRoom(roomId);
+
+    return 'Deleted client and room';
   }
 
   return Object.values(room.connectedClients);
