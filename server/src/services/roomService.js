@@ -2,7 +2,7 @@
 
 const shortid = require('shortid');
 const Errors = require('../common/Errors');
-const typeChecker = require('../common/typeChecker');
+const typeChecker = require('../helpers/type-checker');
 
 const db = require('../db/db');
 

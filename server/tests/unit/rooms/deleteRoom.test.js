@@ -9,8 +9,7 @@ const roomService = require('../../../src/services/roomService');
 const Errors = require('../../../src/common/Errors');
 
 describe('Delete room', () => {
-  it('Should return true when the room is deleted', () => {
-    // Arrange
+  beforeEach(() => {
     sinon.stub(db, 'rooms').value({
       '1': {
         id: '1',
@@ -18,7 +17,14 @@ describe('Delete room', () => {
         connectedClients: {}
       }
     });
+  });
 
+  afterEach(() => {
+    sinon.restore();
+  });
+
+  it('Should return true when the room is deleted', () => {
+    // Arrange
     const id = '1';
 
     // Act
@@ -57,14 +63,6 @@ describe('Delete room', () => {
 
   it('Should return ROOM_NOT_FOUND custom error when the room does not exist', () => {
     // Arrange
-    sinon.stub(db, 'rooms').value({
-      '1': {
-        id: '1',
-        name: 'Test room',
-        connectedClients: {}
-      }
-    });
-
     const roomId = '2';
     const expectedError = Errors.ROOM_NOT_FOUND;
 
