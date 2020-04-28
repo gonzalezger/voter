@@ -57,28 +57,48 @@ function getRoomConnectedClients(id) {
   return Object.values(db.rooms[id].connectedClients);
 }
 
-function addClient(roomId, { socket, name, isAdmin }) {
+function addClient(roomId, { socketId, name, isAdmin } = {}) {
+  // TODO: Wrap this logic into a separate npm package
+  // validate({
+  //  roomId: {
+  //    value: roomId,
+  //    validations: ['string', 'not_empty'],
+  //    funValidations: [cb1, cb2]
+  // }
+  //})
+
   if (!roomId) return Errors.EMPTY_PARAMETER_VALUE('roomId');
+
+  if (!typeChecker.isString(roomId)) return Errors.INVALID_PARAMETER_TYPE(typeof roomId, 'string');
 
   if (!existRoom(roomId)) return Errors.ROOM_NOT_FOUND;
 
-  if (existClient(roomId, socket.id)) return Errors.CLIENT_FOUND;
+  if (!socketId) return Errors.EMPTY_PARAMETER_VALUE('socketId');
+
+  if (!typeChecker.isString(socketId))
+    return Errors.INVALID_PARAMETER_TYPE(typeof socketId, 'string');
+
+  if (!name) return Errors.EMPTY_PARAMETER_VALUE('name');
+
+  if (!typeChecker.isString(name)) return Errors.INVALID_PARAMETER_TYPE(typeof name, 'string');
+
+  if (existClient(roomId, socketId)) return Errors.CLIENT_FOUND;
 
   const room = db.rooms[roomId];
 
-  room.connectedClients[socket.id] = { id: socket.id, name, isAdmin };
+  room.connectedClients[socketId] = { id: socketId, name, isAdmin };
 
   return Object.values(room.connectedClients);
 }
 
-function deleteClient(roomId, { socket }) {
+function deleteClient(roomId, { socketId }) {
   if (!existRoom(roomId)) return Errors.ROOM_NOT_FOUND;
 
-  if (!existClient(roomId, socket.id)) return Errors.CLIENT_NOT_FOUND;
+  if (!existClient(roomId, socketId)) return Errors.CLIENT_NOT_FOUND;
 
   const room = db.rooms[roomId];
 
-  delete room.connectedClients[socket.id];
+  delete room.connectedClients[socketId];
 
   const connectedClients = getRoomConnectedClients(roomId);
   if (Array.isArray(connectedClients) && connectedClients.length) {
@@ -89,11 +109,11 @@ function deleteClient(roomId, { socket }) {
 }
 
 function existRoom(id) {
-  return !!db.rooms[id];
+  return id in db.rooms;
 }
 
 function existClient(roomId, socketId) {
-  return !!db.rooms[roomId].connectedClients[socketId];
+  return socketId in db.rooms[roomId].connectedClients;
 }
 
 module.exports = {
