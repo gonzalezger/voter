@@ -6,7 +6,6 @@ export default function RoomPage({ socket, room, user, usersConnected }) {
 
   useEffect(() => {
     socket.on('update_users_connected', ({ usersConnected }) => {
-      console.log('usersConnected', usersConnected);
       setUsers(usersConnected);
     });
   }, []);

@@ -3,9 +3,9 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
 
-const db = require('../../../src/db/db');
-const roomService = require('../../../src/services/roomService');
-const Errors = require('../../../src/common/Errors');
+const db = require('../../../../src/db/db');
+const roomService = require('../../../../src/services/roomService');
+const Errors = require('../../../../src/common/Errors');
 
 module.exports = () =>
   describe('Create room', () => {
