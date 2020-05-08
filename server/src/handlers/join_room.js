@@ -1,13 +1,16 @@
 'use strict';
 
-const roomService = require('../services/roomService');
+const roomService = require('../services/room');
 const events = require('../common/events');
 
 module.exports = (socket, { roomId, username, isAdmin, isCreating }) => {
   const room = isCreating ? roomService.createRoom(roomId).id : roomId;
 
   socket.join(room, (err) => {
-    if (err) return;
+    if (err) {
+      console.log(err);
+      return;
+    }
 
     const result = roomService.addClient(room, { socketId: socket.id, name: username, isAdmin });
 

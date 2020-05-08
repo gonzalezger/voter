@@ -16,7 +16,6 @@ export default function HomePage() {
     socket.on('already_exist', message => console.log(message));
 
     socket.on('enter_room', ({ room, user, usersConnected }) => {
-      console.log(usersConnected);
       setUser(user);
       setUsersConnected(usersConnected);
       setRoomJoined(room);
@@ -36,8 +35,8 @@ export default function HomePage() {
     <RoomPage socket={socket} room={roomJoined} user={user} usersConnected={usersConnected} />
   ) : (
       <div style={{ textAlign: 'center', margin: '30vh auto', width: '70%' }}>
-        <input id="username" onChange={e => setUsername(e.target.value.trim())} required placeholder="Your name .." /><br />
-        <input id="room" onChange={e => setRoom(e.target.value.trim())} placeholder="Room name" /><br />
+        <input onChange={e => setUsername(e.target.value.trim())} placeholder="Your name .." /><br />
+        <input onChange={e => setRoom(e.target.value.trim())} placeholder="Room name" /><br />
         <button onClick={e => handleJoinRoom(e, true)}>Create Room</button>
         <button onClick={e => handleJoinRoom(e, false)}>Join Room</button>
       </div>

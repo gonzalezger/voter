@@ -6,7 +6,14 @@ module.exports = Object.freeze({
   JOIN_ROOM: 'join_room',
   ENTER_ROOM: 'enter_room',
   UPDATE_USERS_CONNECTED: 'update_users_connected',
-  USER_LEFT_ROOM: 'user_left_room',
 
-  ALREADY_EXIST: 'already_exist'
+  ALREADY_EXIST: 'already_exist',
+
+  INIT_VOTE_TOPIC: 'init_vote_topic',
+  SET_VOTE_TOPIC: 'set_vote_topic',
+
+  UPDATE_USERS_VOTE_STATE: 'update_users_vote_state',
+
+  SEND_VOTE: 'send_vote',
+  UPDATE_USERS_VOTE: 'update_users_vote'
 });

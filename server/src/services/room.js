@@ -2,14 +2,11 @@
 
 const shortid = require('shortid');
 const Errors = require('../common/Errors');
-const typeChecker = require('../helpers/type-checker');
 
-const db = require('../db/db');
+const db = require('../db/in-memory');
 
 function getRoom(id) {
   if (!id) return Errors.EMPTY_PARAMETER_VALUE('id');
-
-  if (!typeChecker.isString(id)) return Errors.INVALID_PARAMETER_TYPE(typeof id, 'string');
 
   return db.rooms[id] || Errors.ROOM_NOT_FOUND;
 }
@@ -17,14 +14,15 @@ function getRoom(id) {
 function createRoom(name) {
   if (!name) return Errors.EMPTY_PARAMETER_VALUE('name');
 
-  if (!typeChecker.isString(name)) return Errors.INVALID_PARAMETER_TYPE(typeof name, 'string');
-
   const id = shortid.generate();
 
   db.rooms[id] = {
     id,
     name,
-    connectedClients: {}
+    connectedClients: {},
+    voting: {
+      current: {}
+    }
   };
 
   return { id, name };
@@ -32,8 +30,6 @@ function createRoom(name) {
 
 function deleteRoom(id) {
   if (!id) return Errors.EMPTY_PARAMETER_VALUE('id');
-
-  if (!typeChecker.isString(id)) return Errors.INVALID_PARAMETER_TYPE(typeof id, 'string');
 
   if (!existRoom(id)) return Errors.ROOM_NOT_FOUND;
 
@@ -50,37 +46,19 @@ function deleteRoom(id) {
 function getRoomConnectedClients(id) {
   if (!id) return Errors.EMPTY_PARAMETER_VALUE('id');
 
-  if (!typeChecker.isString(id)) return Errors.INVALID_PARAMETER_TYPE(typeof id, 'string');
-
   if (!existRoom(id)) return Errors.ROOM_NOT_FOUND;
 
   return Object.values(db.rooms[id].connectedClients);
 }
 
 function addClient(roomId, { socketId, name, isAdmin } = {}) {
-  // TODO: Wrap this logic into a separate npm package
-  // validate({
-  //  roomId: {
-  //    value: roomId,
-  //    validations: ['string', 'not_empty'],
-  //    funValidations: [cb1, cb2]
-  // }
-  //})
-
   if (!roomId) return Errors.EMPTY_PARAMETER_VALUE('roomId');
-
-  if (!typeChecker.isString(roomId)) return Errors.INVALID_PARAMETER_TYPE(typeof roomId, 'string');
 
   if (!existRoom(roomId)) return Errors.ROOM_NOT_FOUND;
 
   if (!socketId) return Errors.EMPTY_PARAMETER_VALUE('socketId');
 
-  if (!typeChecker.isString(socketId))
-    return Errors.INVALID_PARAMETER_TYPE(typeof socketId, 'string');
-
   if (!name) return Errors.EMPTY_PARAMETER_VALUE('name');
-
-  if (!typeChecker.isString(name)) return Errors.INVALID_PARAMETER_TYPE(typeof name, 'string');
 
   if (existClient(roomId, socketId)) return Errors.CLIENT_FOUND;
 
@@ -94,14 +72,9 @@ function addClient(roomId, { socketId, name, isAdmin } = {}) {
 function deleteClient(roomId, socketId) {
   if (!roomId) return Errors.EMPTY_PARAMETER_VALUE('roomId');
 
-  if (!typeChecker.isString(roomId)) return Errors.INVALID_PARAMETER_TYPE(typeof roomId, 'string');
-
   if (!existRoom(roomId)) return Errors.ROOM_NOT_FOUND;
 
   if (!socketId) return Errors.EMPTY_PARAMETER_VALUE('socketId');
-
-  if (!typeChecker.isString(socketId))
-    return Errors.INVALID_PARAMETER_TYPE(typeof socketId, 'string');
 
   if (!existClient(roomId, socketId)) return Errors.CLIENT_NOT_FOUND;
 
@@ -119,6 +92,22 @@ function deleteClient(roomId, socketId) {
   return Object.values(room.connectedClients);
 }
 
+function getCurrentVotingState(roomId) {
+  return getRoom(roomId).voting.current;
+}
+
+function setCurrentVotingState(roomId, topic, usersVoteState) {
+  const roomVoting = getRoom(roomId).voting;
+
+  roomVoting.current = {
+    topic,
+    votes: usersVoteState.reduce(
+      (acc, { label, value, hasVoted }) => ((acc[label] = { label, value, hasVoted }), acc),
+      {}
+    )
+  };
+}
+
 function existRoom(id) {
   return id in db.rooms;
 }
@@ -133,5 +122,7 @@ module.exports = {
   deleteRoom,
   getRoomConnectedClients,
   addClient,
-  deleteClient
+  deleteClient,
+  getCurrentVotingState,
+  setCurrentVotingState
 };
