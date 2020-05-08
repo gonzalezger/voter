@@ -1,7 +1,6 @@
 'use strict';
 
 const shortid = require('shortid');
-const Errors = require('../common/Errors');
 
 const db = require('../db/in-memory');
 
