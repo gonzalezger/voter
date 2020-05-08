@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import RoomPage from './RoomPage';
 
-const socket = io('http://127.0.0.1:4000');
+const socket = io('https://voter-server.herokuapp.com:4000');
 
 export default function HomePage() {
   const [username, setUsername] = useState('');
