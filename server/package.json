@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
+    "start": "node server.js",
     "test": "nyc mocha ./tests/**/*.test.js",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
     "prettier": "prettier --write \"{src,tests}/**/*.{js,ts}\"",
