@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "concurrently --kill-others \"npm run server:start-dev\" \"npm run client:start\"",
-    "start": "cd server && npm start",
+    "start": "cd server && npm install && npm start",
     "postinstal": "npm install --prefix server",
     "server:start-dev": "cd server && npm run dev",
     "server:start": "cd server && node server.js",
