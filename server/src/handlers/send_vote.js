@@ -18,5 +18,14 @@ module.exports = (io, { roomId, user, value }) => {
 
   const admin = roomService.getRoomConnectedClients(roomId).find((f) => f.isAdmin);
 
-  io.to(admin.id).emit(events.UPDATE_USERS_VOTE_STATE, { usersVoteState: newUsersVotesState });
+  const allHaveVoted = newUsersVotesState.every((e) => e.hasVoted);
+
+  io.to(admin.id).emit(events.UPDATE_USERS_VOTE_STATE, {
+    usersVoteState: newUsersVotesState,
+    reveal: allHaveVoted
+  });
+
+  if (allHaveVoted) {
+    io.in(roomId).emit(events.DISABLE_VOTING, true);
+  }
 };

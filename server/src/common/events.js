@@ -15,5 +15,6 @@ module.exports = Object.freeze({
   UPDATE_USERS_VOTE_STATE: 'update_users_vote_state',
 
   SEND_VOTE: 'send_vote',
+  DISABLE_VOTING: 'disable_voting',
   UPDATE_USERS_VOTE: 'update_users_vote'
 });

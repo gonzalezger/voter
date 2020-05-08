@@ -9,6 +9,7 @@ export default function RoomPage({ socket, room, user, usersConnected }) {
   const [voteTopic, setVoteTopic] = useState();
   const [voteValues, setVoteValues] = useState([]);
   const [usersVoteState, setUsersVoteState] = useState([]);
+  const [votingEnabled, setVotingEnabled] = useState();
 
   useEffect(() => {
     socket.on('update_users_connected', (message) => {
@@ -16,6 +17,7 @@ export default function RoomPage({ socket, room, user, usersConnected }) {
     });
 
     socket.on('set_vote_topic', (message) => {
+      setVotingEnabled(true);
       setVoteTopic(message.topic);
       setVoteValues(message.voteValues);
     });
@@ -24,11 +26,15 @@ export default function RoomPage({ socket, room, user, usersConnected }) {
       const values = message.usersVoteState.map(voteState => {
         return {
           label: voteState.label,
-          value: voteState.hasVoted ? <FcApprove /> : <FcDecision />
+          value: message.reveal ? voteState.value : voteState.hasVoted ? <FcApprove /> : <FcDecision />
         }
       });
 
       setUsersVoteState(values);
+    });
+
+    socket.on('disable_voting', () => {
+      setVotingEnabled(false);
     });
   }, []);
 
@@ -58,16 +64,16 @@ export default function RoomPage({ socket, room, user, usersConnected }) {
 
       {user.isAdmin && <SendTopic onSend={handleSendTopic} />}
 
-      {voteValues && (
+      {voteValues.length > 0 && (
         <>
           {voteTopic && <h2>Topic: {voteTopic}</h2>}
-          <VoteCardList selectable={true} onCardSelected={handleCardSelected} values={voteValues} />
+          <VoteCardList selectable={votingEnabled} onCardSelected={handleCardSelected} values={voteValues} />
         </>
       )}
 
       <br />
 
-      {usersVoteState && <VoteCardList onCardSelected={e => e} values={usersVoteState} />}
+      {usersVoteState.length > 0 && <VoteCardList onCardSelected={e => e} values={usersVoteState} />}
     </div>
   );
 }
